@@ -34,9 +34,10 @@ def shop_trip() -> None:
             customer.location = cheapest_shop.location
 
             print(f"\n{customer.name} rides home")
-            print(f"{customer.name} now has {round(customer.money, 2)} dollars")
-            print()
+            # Dividimos la línea para no exceder los 79 caracteres
+            final_money = round(customer.money, 2)
+            print(f"{customer.name} now has {final_money} dollars\n")
         else:
-            msg = f"{customer.name} doesn't have enough money " \
-                  f"to make a purchase in any shop\n"
+            msg = (f"{customer.name} doesn't have enough money "
+                   "to make a purchase in any shop\n")
             print(msg)

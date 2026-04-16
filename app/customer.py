@@ -19,7 +19,7 @@ class Customer:
         distance = self.get_distance(shop.location)
         fuel_needed = (distance * 2 * self.car["fuel_consumption"]) / 100
         fuel_cost = fuel_needed * fuel_price
-        
+
         product_cost = sum(
             self.product_cart[item] * shop.products[item]
             for item in self.product_cart

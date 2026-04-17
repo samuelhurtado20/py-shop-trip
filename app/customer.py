@@ -6,7 +6,7 @@ class Customer:
         self.name = data["name"]
         self.product_cart = data["product_cart"]
         self.location = data["location"]
-        self.money = data["money"]
+        self.money = float(data["money"])
         self.car = data["car"]
 
     def get_distance(self, target_location: list[int]) -> float:
@@ -17,11 +17,12 @@ class Customer:
 
     def calculate_trip_cost(self, shop: any, fuel_price: float) -> float:
         distance = self.get_distance(shop.location)
+        # Ida y vuelta
         fuel_needed = (distance * 2 * self.car["fuel_consumption"]) / 100
         fuel_cost = fuel_needed * fuel_price
 
-        product_cost = sum(
-            self.product_cart[item] * shop.products[item]
-            for item in self.product_cart
-        )
+        product_cost = 0.0
+        for item, quantity in self.product_cart.items():
+            product_cost += quantity * shop.products[item]
+
         return fuel_cost + product_cost

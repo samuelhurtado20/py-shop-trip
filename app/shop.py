@@ -1,4 +1,4 @@
-import datetime  # Importa el módulo completo para que el mock funcione
+import datetime
 
 
 class Shop:
@@ -7,29 +7,21 @@ class Shop:
         self.location = data["location"]
         self.products = data["products"]
 
-    def print_receipt(self, customer: any) -> float:
-        # Usamos datetime.datetime.now() para que coincida con el mock del test
+    def print_receipt(self, customer: any) -> None:
         now = datetime.datetime.now()
         timestamp = now.strftime("%d/%m/%Y %H:%M:%S")
         print(f"Date: {timestamp}")
         print(f"Thanks, {customer.name}, for your purchase!")
         print("You have bought:")
 
-        total_products_cost = 0.0
-        for item, quantity in customer.product_cart.items():
+        total_cost = 0.0
+        for item, qty in customer.product_cart.items():
             price = self.products[item]
-            cost = quantity * price
-            total_products_cost += cost
-            unit_name = f"{item}s" if quantity > 1 else item
+            cost = qty * price
+            total_cost += cost
+            unit = f"{item}s" if qty > 1 else item
+            # Formateo estricto a 2 decimales
+            print(f"{qty} {unit} for {cost:.2f} dollars")
 
-            # Lógica para evitar el .0 si el número es entero
-            printable_cost = int(cost) if cost == int(cost) else cost
-            print(f"{quantity} {unit_name} for {printable_cost} dollars")
-
-        # Aplicamos la misma lógica al total
-        total_print = (int(total_products_cost)
-                       if total_products_cost == int(total_products_cost)
-                       else total_products_cost)
-        print(f"Total cost is {total_print} dollars")
+        print(f"Total cost is {total_cost:.2f} dollars")
         print("See you again!")
-        return total_products_cost

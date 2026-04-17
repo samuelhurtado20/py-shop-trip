@@ -5,12 +5,16 @@ from app.shop import Shop
 
 
 def shop_trip() -> None:
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    config_path = os.path.join(root_dir, "config.json")
+    # Obtenemos el directorio donde está este archivo (main.py)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
 
+    # Según tu imagen, config.json está en la misma carpeta que main.py
+    config_path = os.path.join(current_dir, "config.json")
+
+    # Si por alguna razón el test lo mueve a la raíz, usamos este fallback
     if not os.path.exists(config_path):
-        # Si falla, intentamos buscarlo en el directorio actual por si acaso
-        config_path = "config.json"
+        root_dir = os.path.abspath(os.path.join(current_dir, ".."))
+        config_path = os.path.join(root_dir, "config.json")
 
     with open(config_path, "r") as f:
         config = json.load(f)

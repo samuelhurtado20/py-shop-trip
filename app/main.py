@@ -5,7 +5,13 @@ from app.shop import Shop
 
 
 def shop_trip() -> None:
-    config_path = os.path.join(os.path.dirname(__file__), "../config.json")
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    config_path = os.path.join(root_dir, "config.json")
+
+    if not os.path.exists(config_path):
+        # Si falla, intentamos buscarlo en el directorio actual por si acaso
+        config_path = "config.json"
+
     with open(config_path, "r") as f:
         config = json.load(f)
 

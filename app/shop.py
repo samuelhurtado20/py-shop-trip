@@ -27,8 +27,8 @@ class Shop:
             print(f"{quantity} {unit_name} for {printable_cost} dollars")
 
         # Aplicamos la misma lógica al total
-        total_print = (int(total_products_cost) 
-                       if total_products_cost == int(total_products_cost) 
+        total_print = (int(total_products_cost)
+                       if total_products_cost == int(total_products_cost)
                        else total_products_cost)
         print(f"Total cost is {total_print} dollars")
         print("See you again!")

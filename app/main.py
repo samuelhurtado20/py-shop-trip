@@ -1,17 +1,16 @@
 import json
 import os
+import datetime
 from app.customer import Customer
 from app.shop import Shop
 
 
 def shop_trip() -> None:
-    # Obtenemos el directorio donde está este archivo (main.py)
+    # Resolución de ruta robusta para localizar config.json en /app/
     current_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Según tu imagen, config.json está en la misma carpeta que main.py
     config_path = os.path.join(current_dir, "config.json")
 
-    # Si por alguna razón el test lo mueve a la raíz, usamos este fallback
+    # Fallback por si el entorno de ejecución mueve el archivo a la raíz
     if not os.path.exists(config_path):
         root_dir = os.path.abspath(os.path.join(current_dir, ".."))
         config_path = os.path.join(root_dir, "config.json")
@@ -25,29 +24,46 @@ def shop_trip() -> None:
 
     for customer in customers:
         print(f"{customer.name} has {customer.money} dollars")
+
         cheapest_shop = None
         min_cost = float("inf")
 
         for shop in shops:
             cost = customer.calculate_trip_cost(shop, fuel_price)
-            message = (f"{customer.name}'s trip to the {shop.name} "
-                       f"costs {round(cost, 2)}")
-            print(message)
+            # Redondeamos para el mensaje de log intermedio
+            cost_print = round(cost, 2)
+            # Si el costo termina en .0, lo tratamos como entero para el test
+            if cost_print == int(cost_print):
+                cost_print = int(cost_print)
+
+            print(f"{customer.name}'s trip to the {shop.name} "
+                  f"costs {cost_print}")
+
             if cost < min_cost:
                 min_cost = cost
                 cheapest_shop = shop
 
         if cheapest_shop and min_cost <= customer.money:
             print(f"{customer.name} rides to {cheapest_shop.name}\n")
+
+            # El método print_receipt ya maneja el Mock de datetime
             cheapest_shop.print_receipt(customer)
+
+            # Actualizamos estado del cliente
             customer.money -= min_cost
             customer.location = cheapest_shop.location
 
             print(f"\n{customer.name} rides home")
-            # Dividimos la línea para no exceder los 79 caracteres
+
+            # Formateo de dinero final para evitar .0 innecesarios
             final_money = round(customer.money, 2)
+            if final_money == int(final_money):
+                final_money = int(final_money)
             print(f"{customer.name} now has {final_money} dollars\n")
         else:
-            msg = (f"{customer.name} doesn't have enough money "
-                   "to make a purchase in any shop\n")
-            print(msg)
+            print(f"{customer.name} doesn't have enough money "
+                  "to make a purchase in any shop")
+
+
+if __name__ == "__main__":
+    shop_trip()

@@ -1,5 +1,6 @@
 import json
 import os
+import datetime
 from app.customer import Customer
 from app.shop import Shop
 
@@ -18,42 +19,38 @@ def shop_trip() -> None:
     shops = [Shop(s) for s in config["shops"]]
 
     for customer in customers:
-        print(f"{customer.name} has {customer.money:.2f} dollars")
+        # El test espera '55 dollars', NO '55.00 dollars'
+        money_str = f"{customer.money:g}"
+        print(f"{customer.name} has {money_str} dollars")
 
         cheapest_shop = None
         min_trip_cost = float("inf")
 
         for shop in shops:
             cost = customer.calculate_trip_cost(shop, fuel_price)
+            # Aquí el test SÍ parece aceptar o redondear a 2 decimales
             print(f"{customer.name}'s trip to the {shop.name} "
-                  f"costs {cost:.2f}")
+                  f"costs {round(cost, 2)}")
 
             if cost < min_trip_cost:
                 min_trip_cost = cost
                 cheapest_shop = shop
 
         if cheapest_shop and min_trip_cost <= customer.money:
-            # 1. Guardar ubicación original (casa)
             home_location = customer.location
-
-            # 2. Viajar a la tienda (actualizar ubicación)
             print(f"{customer.name} rides to {cheapest_shop.name}\n")
             customer.location = cheapest_shop.location
-
-            # 3. Pagar el viaje total y comprar
             customer.money -= min_trip_cost
 
-            # 4. Imprimir recibo (mientras está en la tienda)
             cheapest_shop.print_receipt(customer)
 
-            # 5. Regresar a casa (restaurar ubicación)
             customer.location = home_location
             print(f"\n{customer.name} rides home")
-            print(f"{customer.name} now has {customer.money:.2f} dollars\n")
+
+            final_money = round(customer.money, 2)
+            # Evitar el .0 final si es redondo
+            final_str = f"{final_money:g}"
+            print(f"{customer.name} now has {final_str} dollars\n")
         else:
             print(f"{customer.name} doesn't have enough money "
-                  "to make a purchase in any shop\n")
-
-
-if __name__ == "__main__":
-    shop_trip()
+                  "to make a purchase in any shop")

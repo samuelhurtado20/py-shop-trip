@@ -22,7 +22,7 @@ class Shop:
             unit = f"{item}s" if qty > 1 else item
 
             # Lógica para quitar .0 pero mantener decimales necesarios
-            cost_str = f"{cost:g}" 
+            cost_str = f"{cost:g}"
             print(f"{qty} {unit} for {cost_str} dollars")
 
         total_str = f"{total_cost:g}"

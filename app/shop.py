@@ -20,8 +20,11 @@ class Shop:
             cost = qty * price
             total_cost += cost
             unit = f"{item}s" if qty > 1 else item
-            # Formateo estricto a 2 decimales
-            print(f"{qty} {unit} for {cost:.2f} dollars")
 
-        print(f"Total cost is {total_cost:.2f} dollars")
+            # Lógica para quitar .0 pero mantener decimales necesarios
+            cost_str = f"{cost:g}" 
+            print(f"{qty} {unit} for {cost_str} dollars")
+
+        total_str = f"{total_cost:g}"
+        print(f"Total cost is {total_str} dollars")
         print("See you again!")
